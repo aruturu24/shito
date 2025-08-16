@@ -51,7 +51,7 @@ impl App {
             selected: 0,
             mode: Mode::List,
             input: String::new(),
-            status: String::from("q: quit • n: new • e: edit • d: delete • r: roll • +/- hp • [/] slot • 1-9 select slot"),
+            status: String::from("🚪 q: quit • ✨ n: new • ✏️ e: edit • 🗑️ d: delete • 🎲 r: roll • ❤️ +/- hp • 🔮 [/] slot • 🔢 1-9 select slot"),
             last_tick: Instant::now(),
             wizard: None,
             selected_spell_level: 1,
@@ -130,13 +130,13 @@ impl App {
                 KeyCode::Char('n') => {
                     self.mode = Mode::CreateName;
                     self.input.clear();
-                    self.status = String::from("Create: Enter name. Enter to confirm. Esc to cancel.");
+                    self.status = String::from("✨ Create: Enter name. ⏎ Enter to confirm. ⎋ Esc to cancel.");
                     self.wizard = Some(NewCharDraft::default());
                 }
                 KeyCode::Char('e') => {
                     if self.current_mut().is_some() {
                         self.mode = Mode::Edit;
-                        self.status = String::from("Editing: +/- hp • [/] adjust • 1-9 select slot • a/A add/remove item • l level up • s save • Esc cancel");
+                        self.status = String::from("✏️ Editing: ❤️ +/- hp • 🔮 [/] adjust • 🔢 1-9 select slot • 🎒 a/A add/remove item • 📈 l level up • 💾 s save • ⎋ Esc cancel");
                     }
                 }
                 KeyCode::Char('d') => {
@@ -148,7 +148,7 @@ impl App {
                 KeyCode::Char('r') => {
                     self.mode = Mode::Roll;
                     self.input.clear();
-                    self.status = String::from("Type dice (e.g., d20, 2d6) then Enter. Esc cancel");
+                    self.status = String::from("🎲 Type dice (e.g., d20, 2d6) then ⏎ Enter. ⎋ Esc cancel");
                 }
                 _ => {}
             },
@@ -157,7 +157,7 @@ impl App {
                 KeyCode::Enter => {
                     if let Some(w) = &mut self.wizard { w.name = if self.input.trim().is_empty(){"Unnamed".into()} else { self.input.trim().into() }; }
                     self.input.clear();
-                    self.mode = Mode::CreateClass; self.status = String::from("Enter class");
+                    self.mode = Mode::CreateClass; self.status = String::from("⚔️ Enter class");
                 }
                 KeyCode::Char(ch) => self.input.push(ch),
                 KeyCode::Backspace => { self.input.pop(); },
@@ -168,7 +168,7 @@ impl App {
                 KeyCode::Enter => {
                     if let Some(w) = &mut self.wizard { w.class_name = if self.input.trim().is_empty(){"Fighter".into()} else { self.input.trim().into() }; }
                     self.input.clear();
-                    self.mode = Mode::CreateRace; self.status = String::from("Enter race");
+                    self.mode = Mode::CreateRace; self.status = String::from("🧬 Enter race");
                 }
                 KeyCode::Char(ch) => self.input.push(ch),
                 KeyCode::Backspace => { self.input.pop(); },
@@ -179,7 +179,7 @@ impl App {
                 KeyCode::Enter => {
                     if let Some(w) = &mut self.wizard { w.race = if self.input.trim().is_empty(){"Human".into()} else { self.input.trim().into() }; }
                     self.input.clear();
-                    self.mode = Mode::CreateAbilities; self.status = String::from("Enter abilities as STR DEX CON INT WIS CHA (e.g., 15 14 13 12 10 8)");
+                    self.mode = Mode::CreateAbilities; self.status = String::from("💪 Enter abilities as STR DEX CON INT WIS CHA (e.g., 15 14 13 12 10 8)");
                 }
                 KeyCode::Char(ch) => self.input.push(ch),
                 KeyCode::Backspace => { self.input.pop(); },
@@ -189,11 +189,11 @@ impl App {
                 KeyCode::Esc => { self.mode = Mode::List; self.status = default_status(); }
                 KeyCode::Enter => {
                     let nums: Vec<i32> = self.input.split_whitespace().filter_map(|s| s.parse::<i32>().ok()).collect();
-                    if nums.len() != 6 { self.status = String::from("Please enter exactly 6 numbers"); }
+                    if nums.len() != 6 { self.status = String::from("⚠️ Please enter exactly 6 numbers"); }
                     else {
                         if let Some(w) = &mut self.wizard { w.abilities = [nums[0], nums[1], nums[2], nums[3], nums[4], nums[5]]; }
                         self.input.clear();
-                        self.mode = Mode::CreateHpMax; self.status = String::from("Enter HP Max (number)");
+                        self.mode = Mode::CreateHpMax; self.status = String::from("❤️ Enter HP Max (number)");
                     }
                 }
                 KeyCode::Char(ch) => self.input.push(ch),
@@ -206,8 +206,8 @@ impl App {
                     if let Ok(v) = self.input.trim().parse::<i32>() {
                         if let Some(w) = &mut self.wizard { w.hp_max = v.max(1); w.hp_current = w.hp_max; }
                         self.input.clear();
-                        self.mode = Mode::CreateAc; self.status = String::from("Enter Armor Class (AC) number");
-                    } else { self.status = String::from("Please enter a valid number"); }
+                        self.mode = Mode::CreateAc; self.status = String::from("🛡️ Enter Armor Class (AC) number");
+                    } else { self.status = String::from("⚠️ Please enter a valid number"); }
                 }
                 KeyCode::Char(ch) => self.input.push(ch),
                 KeyCode::Backspace => { self.input.pop(); },
@@ -219,8 +219,8 @@ impl App {
                     if let Ok(v) = self.input.trim().parse::<i32>() {
                         if let Some(w) = &mut self.wizard { w.armor_class = v; }
                         self.input.clear();
-                        self.mode = Mode::CreateSpeed; self.status = String::from("Enter Speed (ft) number");
-                    } else { self.status = String::from("Please enter a valid number"); }
+                        self.mode = Mode::CreateSpeed; self.status = String::from("💨 Enter Speed (ft) number");
+                    } else { self.status = String::from("⚠️ Please enter a valid number"); }
                 }
                 KeyCode::Char(ch) => self.input.push(ch),
                 KeyCode::Backspace => { self.input.pop(); },
@@ -232,8 +232,8 @@ impl App {
                     if let Ok(v) = self.input.trim().parse::<i32>() {
                         if let Some(w) = &mut self.wizard { w.speed = v; }
                         self.input.clear();
-                        self.mode = Mode::CreateSkills; self.status = String::from("Enter skills separated by comma or semicolon (e.g., perception, stealth or stealth; perception)");
-                    } else { self.status = String::from("Please enter a valid number"); }
+                        self.mode = Mode::CreateSkills; self.status = String::from("🎯 Enter skills separated by comma or semicolon (e.g., perception, stealth or stealth; perception)");
+                    } else { self.status = String::from("⚠️ Please enter a valid number"); }
                 }
                 KeyCode::Char(ch) => self.input.push(ch),
                 KeyCode::Backspace => { self.input.pop(); },
@@ -279,7 +279,7 @@ impl App {
                 KeyCode::Left | KeyCode::Char('h') => { self.detail_tab = self.detail_tab.saturating_sub(1); }
                 KeyCode::Right | KeyCode::Char('l') => { self.detail_tab = (self.detail_tab + 1).min(2); }
                 KeyCode::Char('e') => { if self.current_mut().is_some() { self.mode = Mode::Edit; self.status = edit_status(); } }
-                KeyCode::Char('r') => { self.mode = Mode::Roll; self.input.clear(); self.status = String::from("Type: NdM, skill, or ability. Esc cancel"); }
+                KeyCode::Char('r') => { self.mode = Mode::Roll; self.input.clear(); self.status = String::from("🎲 Type: NdM, skill, or ability. ⎋ Esc cancel"); }
                 _ => {}
             },
             Mode::Edit => match code {
@@ -288,16 +288,16 @@ impl App {
                 KeyCode::Char('-') => { if let Some(c) = self.current_mut(){ c.change_hp(-1); let _ = self.save_current(); } }
                 KeyCode::Char('l') => { if let Some(c) = self.current_mut(){ c.level_up(); let _ = self.save_current(); } }
                 KeyCode::Left | KeyCode::Char('h') => { self.detail_tab = self.detail_tab.saturating_sub(1); }
-                KeyCode::Right | KeyCode::Char('l') => { self.detail_tab = (self.detail_tab + 1).min(2); }
-                KeyCode::Char('1') => { self.selected_spell_level = 1; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('2') => { self.selected_spell_level = 2; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('3') => { self.selected_spell_level = 3; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('4') => { self.selected_spell_level = 4; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('5') => { self.selected_spell_level = 5; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('6') => { self.selected_spell_level = 6; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('7') => { self.selected_spell_level = 7; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('8') => { self.selected_spell_level = 8; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
-                KeyCode::Char('9') => { self.selected_spell_level = 9; self.status = format!("Editing: Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Right => { self.detail_tab = (self.detail_tab + 1).min(2); }
+                KeyCode::Char('1') => { self.selected_spell_level = 1; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('2') => { self.selected_spell_level = 2; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('3') => { self.selected_spell_level = 3; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('4') => { self.selected_spell_level = 4; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('5') => { self.selected_spell_level = 5; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('6') => { self.selected_spell_level = 6; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('7') => { self.selected_spell_level = 7; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('8') => { self.selected_spell_level = 8; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
+                KeyCode::Char('9') => { self.selected_spell_level = 9; self.status = format!("✏️ Editing: 🔮 Slot L{} selected", self.selected_spell_level); }
                 KeyCode::Char('[') => {
                     let lvl = self.selected_spell_level;
                     if let Some(c) = self.current_mut(){ c.adjust_spell_slot(lvl, -1); }
@@ -308,9 +308,9 @@ impl App {
                     if let Some(c) = self.current_mut(){ c.adjust_spell_slot(lvl, 1); }
                     let _ = self.save_current();
                 }
-                KeyCode::Char('a') => { self.mode = Mode::EditAddItem; self.status = String::from("Type item then Enter to add. Esc cancel"); self.input.clear(); }
+                KeyCode::Char('a') => { self.mode = Mode::EditAddItem; self.status = String::from("🎒 Type item then ⏎ Enter to add. ⎋ Esc cancel"); self.input.clear(); }
                 KeyCode::Char('A') => { if let Some(c) = self.current_mut(){ if !c.inventory.is_empty(){ c.remove_item(c.inventory.len()-1); let _ = self.save_current(); } } }
-                KeyCode::Char('s') => { let _ = self.save_current(); self.status = String::from("Saved."); }
+                KeyCode::Char('s') => { let _ = self.save_current(); self.status = String::from("💾 Saved."); }
                 _ => {}
             },
             Mode::EditAddItem => match code {
@@ -353,7 +353,7 @@ impl App {
                             }
                         }
                     } else { let (t, r) = dice::roll("1d20", 0); total = t; rolls = r; }
-                    self.status = format!("{} rolls {}: {:?} total {}", name, desc, rolls, total);
+                    self.status = format!("🧙 {} rolls {}: {:?} total {}", name, desc, rolls, total);
                     self.mode = Mode::List;
                     self.input.clear();
                 }
@@ -400,26 +400,26 @@ impl App {
                     .iter()
                     .enumerate()
                     .map(|(i, it)| {
-                        let label = format!("{} (Lv {}) - {}/{} HP - AC {}", it.name, it.level, it.hp_current, it.hp_max, it.armor_class);
+                        let label = format!("🧙 {} (📊 Lv.{}) - ❤️ {}/{} HP - 🛡️ AC {}", it.name, it.level, it.hp_current, it.hp_max, it.armor_class);
                         let mut spans = vec![Span::raw(label)];
-                        if i == self.selected { spans.push(Span::styled("  ▶", Style::default().fg(Color::Yellow))); }
+                        if i == self.selected { spans.push(Span::styled("  👈", Style::default().fg(Color::Yellow))); }
                         ListItem::new(Line::from(spans))
                     })
                     .collect();
-                let list = List::new(items).block(Block::default().title("Characters").borders(Borders::ALL));
+                let list = List::new(items).block(Block::default().title("🎭 Characters").borders(Borders::ALL));
                 f.render_widget(list, area);
             }
             Mode::CreateName | Mode::CreateClass | Mode::CreateRace | Mode::CreateAbilities | Mode::CreateHpMax | Mode::CreateAc | Mode::CreateSpeed | Mode::CreateSkills | Mode::Roll => {
                 let title = match self.mode {
-                    Mode::CreateName => "Create: Name",
-                    Mode::CreateClass => "Create: Class",
-                    Mode::CreateRace => "Create: Race",
-                    Mode::CreateAbilities => "Create: Abilities STR DEX CON INT WIS CHA",
-                    Mode::CreateHpMax => "Create: HP Max",
-                    Mode::CreateAc => "Create: Armor Class (AC)",
-                    Mode::CreateSpeed => "Create: Speed (ft)",
-                    Mode::CreateSkills => "Create: Skills (comma or semicolon-separated)",
-                    Mode::Roll => "Roll: NdM or skill name",
+                    Mode::CreateName => "✨ Create: Name",
+                    Mode::CreateClass => "⚔️ Create: Class",
+                    Mode::CreateRace => "🧬 Create: Race",
+                    Mode::CreateAbilities => "💪 Create: Abilities STR DEX CON INT WIS CHA",
+                    Mode::CreateHpMax => "❤️ Create: HP Max",
+                    Mode::CreateAc => "🛡️ Create: Armor Class (AC)",
+                    Mode::CreateSpeed => "💨 Create: Speed (ft)",
+                    Mode::CreateSkills => "🎯 Create: Skills (comma or semicolon-separated)",
+                    Mode::Roll => "🎲 Roll: NdM or skill name",
                     _ => unreachable!(),
                 };
                 let p = Paragraph::new(self.input.clone())
@@ -429,10 +429,10 @@ impl App {
             }
             _ => {
                 // Details view with tabs
-                let tabs_titles = ["General", "Skills", "Inventory"].map(|t| Line::from(Span::styled(t, Style::default())));
+                let tabs_titles = ["📊 General", "🎯 Skills", "🎒 Inventory"].map(|t| Line::from(Span::styled(t, Style::default())));
                 let tabs = Tabs::new(tabs_titles)
                     .select(self.detail_tab)
-                    .block(Block::default().borders(Borders::ALL).title("Details"))
+                    .block(Block::default().borders(Borders::ALL).title("📖 Details"))
                     .highlight_style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
                 let vchunks = Layout::default()
                     .direction(Direction::Vertical)
@@ -444,10 +444,10 @@ impl App {
                     match self.detail_tab {
                         0 => {
                             let mut text = Vec::new();
-                            text.push(Line::from(Span::styled(format!("{} the {} {} (Lv {})", c.name, c.race, c.class_name, c.level), Style::default().add_modifier(Modifier::BOLD))));
+                            text.push(Line::from(Span::styled(format!("🧙 {} the {} {} (📊 Lv.{})", c.name, c.race, c.class_name, c.level), Style::default().add_modifier(Modifier::BOLD))));
                             text.push(Line::from(""));
-                            text.push(Line::from(format!("HP {}/{}  AC {}  SPD {}", c.hp_current, c.hp_max, c.armor_class, c.speed)));
-                            text.push(Line::from(format!("STR {} ({}), DEX {} ({}), CON {} ({}), INT {} ({}), WIS {} ({}), CHA {} ({})",
+                            text.push(Line::from(format!("❤️ HP {}/{}   🛡️ AC {}   💨 SPD {}", c.hp_current, c.hp_max, c.armor_class, c.speed)));
+                            text.push(Line::from(format!("💪 STR {} ({}), 🏃 DEX {} ({}), 🛡️ CON {} ({}), 🧠 INT {} ({}), 🧘 WIS {} ({}), ✨ CHA {} ({})",
                                 c.strength, Character::ability_mod(c.strength),
                                 c.dexterity, Character::ability_mod(c.dexterity),
                                 c.constitution, Character::ability_mod(c.constitution),
@@ -455,28 +455,28 @@ impl App {
                                 c.wisdom, Character::ability_mod(c.wisdom),
                                 c.charisma, Character::ability_mod(c.charisma),
                             )));
-                            text.push(Line::from(format!("Prof bonus: +{}", c.proficiency_bonus())));
+                            text.push(Line::from(format!("🎖️ Prof bonus: +{}", c.proficiency_bonus())));
                             text.push(Line::from(""));
-                            text.push(Line::from("Spell slots (1-9):"));
-                            text.push(Line::from(format!("{}", c.spell_slots.iter().enumerate().map(|(i, n)| format!("{}:{}", i+1, n)).collect::<Vec<_>>().join("  "))));
-                            if let Some(n) = &c.notes { text.push(Line::from("")); text.push(Line::from("Notes:")); text.push(Line::from(n.clone())); }
+                            text.push(Line::from("🔮 Spell slots (1-9):"));
+                            text.push(Line::from(format!("{}", c.spell_slots.iter().enumerate().map(|(i, n)| format!("✨{}:{}", i+1, n)).collect::<Vec<_>>().join("  "))));
+                            if let Some(n) = &c.notes { text.push(Line::from("")); text.push(Line::from("📝 Notes:")); text.push(Line::from(n.clone())); }
                             Paragraph::new(text).block(Block::default().borders(Borders::ALL)).wrap(Wrap { trim: true })
                         }
                         1 => {
                             let mut text = Vec::new();
-                            text.push(Line::from("Skills:"));
+                            text.push(Line::from("🎯 Skills:"));
                             for (name, ability) in all_skills() {
                                 let modif = c.skill_modifier(name);
-                                let star = if c.skill_proficiencies.iter().any(|s| s.to_lowercase()==name) { "*" } else { "" };
+                                let star = if c.skill_proficiencies.iter().any(|s| s.to_lowercase()==name) { " ⭐" } else { "" };
                                 text.push(Line::from(format!("  {}{} ({}): {}{}", capitalize(name), star, ability.to_uppercase(), if modif>=0 {"+"} else {""}, modif)));
                             }
                             Paragraph::new(text).block(Block::default().borders(Borders::ALL)).wrap(Wrap { trim: true })
                         }
                         _ => {
                             let mut text = Vec::new();
-                            text.push(Line::from("Inventory:"));
-                            if c.inventory.is_empty() { text.push(Line::from("  (empty)")); }
-                            for it in &c.inventory { text.push(Line::from(format!("  - {}", it))); }
+                            text.push(Line::from("🎒 Inventory:"));
+                            if c.inventory.is_empty() { text.push(Line::from("  🚧 (empty)")); }
+                            for it in &c.inventory { text.push(Line::from(format!("  🎽 {}", it))); }
                             Paragraph::new(text).block(Block::default().borders(Borders::ALL)).wrap(Wrap { trim: true })
                         }
                     }
@@ -495,7 +495,7 @@ impl App {
 }
 
 fn default_status() -> String {
-    String::from("Enter: open details • q: quit • n: new • d: delete • r: roll")
+    String::from("⏎ Enter: open details • 🚪 q: quit • ✨ n: new • 🗑️ d: delete • 🎲 r: roll")
 }
 
 fn capitalize(s: &str) -> String {
@@ -504,11 +504,11 @@ fn capitalize(s: &str) -> String {
 }
 
 fn details_status() -> String {
-    String::from("Arrows/Tabs: switch tabs • e: edit • r: roll • Esc: back")
+    String::from("←→ Arrows/Tabs: switch tabs • ✏️ e: edit • 🎲 r: roll • ⎋ Esc: back")
 }
 
 fn edit_status() -> String {
-    String::from("Editing: +/- hp • [/] adjust slot • 1-9 select • a/A add/remove item • l level up • s save • Esc: back")
+    String::from("✏️ Editing: ❤️ +/- hp • 🔮 [/] adjust slot • 🔢 1-9 select • 🎒 a/A add/remove item • 📈 l level up • 💾 s save • ⎋ Esc: back")
 }
 
 #[derive(Default, Clone)]
